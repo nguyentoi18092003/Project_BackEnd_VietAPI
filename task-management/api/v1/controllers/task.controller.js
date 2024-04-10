@@ -1,4 +1,5 @@
 const Task=require("../models/task.model");
+const paginationHelper=require("../../../helpers/pagination");
 //[GET]/api/v1/tasks
 module.exports.index= async(req,res)=>{
     const find={
@@ -10,6 +11,19 @@ module.exports.index= async(req,res)=>{
         find.status=req.query.status;
     }
     // Hết bộ lọc theo trang thai
+     //phan trang
+     const countTasks= await Task.countDocuments(find);
+     let objectPagination= paginationHelper(
+         {
+         currentPage:1,
+         // mac dinh neu k truyen page tren url thi no se mac dinh la 1 
+         limitItems:2
+         },
+         req.query,
+         countTasks
+         );
+     
+     //end phan trang
 
     //Sort
     const sort={}
@@ -17,7 +31,10 @@ module.exports.index= async(req,res)=>{
         sort[req.query.sortKey]=req.query.sortValue;
     }
     //End sort
-    const tasks=await Task.find(find).sort(sort);//neu sort ma rong thi no cu lay theo mac dinh
+    const tasks=await Task.find(find)
+    .sort(sort)//neu sort ma rong thi no cu lay theo mac dinh
+    .limit(objectPagination.limitItems)
+    .skip(objectPagination.skip);
     res.json(tasks)
 }
 //[GET]/api/v1/tasks/detail/:id
