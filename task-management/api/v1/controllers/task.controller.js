@@ -1,10 +1,17 @@
 const Task=require("../models/task.model");
 const paginationHelper=require("../../../helpers/pagination");
+const searchHelper=require("../../../helpers/search");
 //[GET]/api/v1/tasks
 module.exports.index= async(req,res)=>{
     const find={
         deleted:false
     };
+    //Chuc nang search
+    const objectSearch=searchHelper(req.query);
+    if(objectSearch.regex){
+        find.title=objectSearch.regex;
+    }
+    //End Chuc nang search
 
     // Bộ lọc theo trang thai
     if(req.query.status){
