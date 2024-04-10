@@ -10,7 +10,14 @@ module.exports.index= async(req,res)=>{
         find.status=req.query.status;
     }
     // Hết bộ lọc theo trang thai
-    const tasks=await Task.find(find)
+
+    //Sort
+    const sort={}
+    if(req.query.sortKey && req.query.sortValue){
+        sort[req.query.sortKey]=req.query.sortValue;
+    }
+    //End sort
+    const tasks=await Task.find(find).sort(sort);//neu sort ma rong thi no cu lay theo mac dinh
     res.json(tasks)
 }
 //[GET]/api/v1/tasks/detail/:id
