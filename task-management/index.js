@@ -1,6 +1,7 @@
 // console.log("OK")
 const express=require("express");
 const bodyPaser=require("body-parser");
+const cors=require("cors");
 require("dotenv").config();
 const database=require("./config/database");
 //Routes Ver1
@@ -9,6 +10,7 @@ const routesVer1=require("./api/v1/routes/index.route")
 database.connect();
 const app=express();
 const port=process.env.PORT;
+app.use(cors())
 
 //parse application/json
 app.use(bodyPaser.json());
