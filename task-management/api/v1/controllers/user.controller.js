@@ -1,6 +1,8 @@
 const md5=require("md5");
 const User=require("../models/user.model");
+
 const generate=require("../../../helpers/generate");
+
 //[POST]/api/v1/users/register
 module.exports.register=async(req,res)=>{
     const exitsEmail=await User.findOne({
@@ -32,3 +34,40 @@ module.exports.register=async(req,res)=>{
         token:token
     });
 };
+
+//[POST]/api/v1/users/login
+module.exports.login=async (req,res)=>{
+    const email=req.body.email;
+    const password=req.body.password;
+
+    const user=await User.findOne({
+        email:email,
+        deleted:false
+    })
+    if(!user){
+        res.json({
+            code:400,
+            message:"Email không tồn tại!"
+        });
+        return;
+    }
+    // console.log(email)
+    // console.log(password)
+    // console.log(md5(password))
+    // console.log(user.password)
+    if(md5(password)!==user.password){
+        res.json({
+            code:400,
+            message:"Sai mật khẩu!"
+        });
+        return;
+    }
+    
+    const token=user.token;
+    res.cookie("token",token);
+    res.json({
+        code:200,
+        message:"Đăng nhập thành công!",
+        token:token
+    })
+}
