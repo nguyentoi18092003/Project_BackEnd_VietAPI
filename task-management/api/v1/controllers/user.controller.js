@@ -78,8 +78,6 @@ module.exports.detail=async(req,res)=>{
         _id:id,
         deleted:false
     }).select("-password -token");
-
-    console.log(user);
     res.json({
         code:200,
         message:"Thành công",
