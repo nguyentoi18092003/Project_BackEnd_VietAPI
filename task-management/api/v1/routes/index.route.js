@@ -1,4 +1,4 @@
-const taskRoutes=require("./task.route");
+const taskRoutes=require("./tasks.route");
 const userRoutes=require("./user.route");
 module.exports=(app)=>{
     const version="/api/v1";
